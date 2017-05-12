@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Transformers Tic-Tac-Toe</title>
+	<style>
+		body
+		{ 
+			background: url('images/gameboard_bg.jpg');
+			margin: 0; 
+			padding:0;
+			height: 100%;
+			width: 100%;
+			font-family: helvetica, arial, sans serif;
+		}
+
+		#wrapper {
+			background: url('images/testBG.png') no-repeat center;
+			width: 1024px;
+  			height: 700px;
+  			margin: auto;
+  			top: 0;
+		}
+
+		.round {
+			width: 70px;
+			margin: 0;
+			position: relative;
+			top: 63px;
+			left: 472px;
+			z-index: 60;
+		}
+		
+		.topBar {
+			width: 100%;
+			margin: 0;
+			position: relative;
+			top: 30px;
+			left: 2px;
+			z-index: 50;
+		}
+		
+		h1, h2, h3, h4, h5, h6 {
+			color: white;
+		}
+		
+		.topBar > h4 {
+			width: 100px;
+			height: 25px;
+			float: left;
+		}
+		
+		.goodname {
+			margin: 12px 194px 0 0;
+			text-align: center;
+			}
+		
+		.badname {
+			margin: 12px 15px 0 0;
+			text-align: center;
+		}
+		
+		#good {
+			margin: 0 20px 0 160px;
+		}
+		
+		#good > .scorethree {
+			margin: 5px 29px 5px 5px;
+		}
+		
+		#bad {
+			margin: 0 20px 0 160px;
+		}
+		#bad > .scoreone {
+			margin: 5px 5px 5px 12px;
+		}
+		
+		#good > div, #bad > div {
+			width: 30px;
+        	height: 30px;
+       	 	float: left;
+			margin: 5px;
+			padding: 1px;
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+
+		#aside1
+		{
+			margin: 95px 0 0 192px;
+			height: 150px;
+			width: 100px;
+			float: left;
+			/* background: rgba(200,100,200,.35); */
+		}
+		
+		#aside2
+		{
+			margin: 95px 0 0 126px;
+			height: 150px;
+			width: 100px;
+			float: left;
+			/* background: rgba(200,100,200,.35); */
+		}
+
+		#aside1 > .scoreBoxone
+		{
+			margin: 245px 0 0 40px;
+			width: 10px;
+			height: 10px;
+			float: left;	
+		}
+		
+		#aside2 > .scoreBoxtwo
+		{	
+			margin: 245px 0 0 43px;
+			width: 10px;
+			height: 10px;
+			float: left;
+		}
+
+		#gameboard
+		{
+			float: left;
+			margin: 140px 0 0 129px;
+			width: 180px;
+			height: 180px;
+			position: relative;
+		}
+
+		.container, .board-dividers
+		{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: 20;
+		}
+
+		.board-dividers { z-index: 10; }
+
+		.board-dividers > div
+		{
+			position: absolute;
+			width: 1px;
+			background: rgba(255,255,255,.8);
+			height: 100%;
+			left: 195px;
+		}
+
+		.board-dividers > .vert { left: 60px; }
+		.board-dividers > .vert-2 { left: 120px; }
+
+		.board-dividers > .horz, .board-dividers > .horz-2
+		{
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			transform: rotate(90deg);
+			left: 90px;
+			top: -30px;
+		}
+
+		.board-dividers > .horz-2 { top: 30px; }
+
+		.container > div
+		{
+			width: 50px;
+        	height: 50px;
+       	 	float: left;
+			margin: 5px;
+			background-repeat: no-repeat;
+			background-size: contain;
+    	}
+
+		aside > div:hover
+		{
+			background-color: rgba(0,128,255, .4);
+			/* border: solid 5px rgba(0,128,255, .8); */
+		}
+
+		.container > div:hover
+		{
+			margin: 0px;
+			border: solid 5px rgba(0,128,255, .8);
+		}
+
+
+		.container > .selected
+		{
+			background-color: rgba(255,255,255,.4);
+			border: solid 5px rgba(255,255,255,.8);
+			margin: 0;
+		}
+
+		.character-1 { background: url('images/marker_01.png'); }
+		.character-2 { background: url('images/marker_02.png'); }
+		.character-3 { background: url('images/marker_03.png'); }
+		.formal-character-1 { background: url('images/formal_marker_01.png'); }
+		.formal-character-2 { background: url('images/formal_marker_02.png'); }
+		.formal-character-3 { background: url('images/formal_marker_03.png'); }
+		.characterScore { background: url('images/marker_01.png'); }
+		.formalcharacterScore { background: url('images/marker_01.png'); }
+		
+		#aside1 > div
+		{
+			width: 100px;
+			height: 100px;
+			float: right;
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: contain !important;
+			cursor: pointer;
+		}
+		
+		#aside2 > div
+		{
+			width: 100px;
+			height: 100px;
+			float: left;
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: contain !important;
+			cursor: pointer;
+		}
+		
+		#messageBox {
+			width: 500px;
+			height: 300px;
+			border: solid 10px blue;
+			background: rgba(30,30,30,.5);
+			position: relative;
+			top: 95px;
+			z-index: 100;
+			margin: auto;
+		}
+		
+		#messageBox1 {
+			width: 500px;
+			height: 300px;
+			border: solid 10px blue;
+			background: rgba(30,30,30,.5);
+			position: relative;
+			top: 100px;
+			z-index: 100;
+			margin: auto;
+		}
+		
+		#messageBox > h4, h5, button {
+			float: left;			
+		}
+		
+		#messageBox1 > h4, h5, button {
+			float: left;			
+		}
+		
+		#messageBox1 > div, h5 {
+			margin: 0 0 0 65px;
+		}
+		
+		#messageBox1 > div {
+			width:100%;
+		}
+		
+		#overlay {
+			position: absolute;
+			z-index: 90;
+			width: 100%;
+			height: 100%;
+			background: rgba(30,30,30,.5);
+		}
+		
+		#backgroundMusic {
+			width: 100px;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+		}
+		
+		.visibleButton{
+			float: left;
+			width: 100%;
+			margin: 0;
+			position: relative;
+			z-index: 70;
+		}
+		
+		.visibleButton > .resetRound {
+			margin: 0;
+			top: 166px;
+			left: 480px;
+			position: relative;
+			color: blue;
+		}
+		
+		.visibleButton > .newGame {
+			margin: 0;
+			top: 181px;
+			left: 362px;
+			color: blue;
+			position: relative;
+			color: blue;
+		}
+		
+</style>
+</head>
+<body>
+<audio id="placeMarkerSound">
+	<source src="audio/transform.mp3" type="audio/mpeg" />
+	<source src="audio/transform.ogg" type="audio/ogg" />
+	Your browser does not support the audio tag.
+</audio>
+<div id="overlay" style="display: none;"></div>
+<div id="messageBox" style="display: none;"></div>
+<div id="messageBox1" style="display: none;">
+		<div>
+			<h1>Welcome to<br>Transformers<br>Tic-Tac-Toe</h1>
+			<h4>Who will go first?</h4>
+			<button class='button1'>Autobots</button>
+			<button class='button2'>Decepticons</button>
+		</div></br></br>
+			<h5>*It's best of 3 | Don't for get to pick<br> your characters on the next screen.</h5>
+</div>
+<div id="wrapper">
+<div class='round'><h4>Round: 1</h4></div>
+<div class='topBar'>
+		<div id='good'>
+			<div class='scoreone'></div>
+			<div class='scoretwo'></div>
+			<div class='scorethree'></div>
+		</div>
+		<h4 class='goodname'>test</h4>
+	<!-- </div> -->
+	<!-- <div class='moveBad'> -->
+		<h4 class='badname'>test</h4>
+		<div id='bad'>
+			<div class='scoreone'></div>
+			<div class='scoretwo'></div>
+			<div class='scorethree'></div>
+		</div>
+	<!-- </div> -->
+</div>
+<aside id="aside1">
+	<div id="playerOneChar" class="character-1"></div>
+	<div class='scoreBoxone'><h1 class='Scoreone'></h1></div>
+</aside>
+<div id="gameboard">
+	<div class="container">
+		<div id="box1">
+		</div>
+		<div id="box2">
+		</div>
+		<div id="box3">
+		</div>
+		<div id="box4">
+		</div>
+		<div id="box5">
+		</div>
+		<div id="box6">
+		</div>
+		<div id="box7">
+		</div>
+		<div id="box8">
+		</div>
+		<div id="box9">
+		</div>
+	</div>
+	<div class="board-dividers">
+		<div class="horz">
+		</div>
+		<div class="horz-2">
+		</div>
+		<div class="vert">
+		</div>
+		<div class="vert-2">
+		</div>
+	</div>
+
+</div>
+	<aside id="aside2">
+		<div id="playerTwoChar" class="formal-character-1"></div>
+			<!-- 
+<h4>
+			</h4>
+ -->
+	<div class='scoreBoxtwo'><h1 class='Scoretwo'></h1></div>
+	</aside>
+<!-- This is Buddy Harris' code button to clear board for current round if there is a mistake of some kind -->
+	<div class='visibleButton'>
+		<button class='newGame'>New Game</button>
+		<button class='resetRound'>Restart Round</button>
+	</div>
+</div>
+
+<audio id="backgroundMusic" autoplay="autoplay" loop="loop" controls="controls">
+	<source src="audio/solarSailer.mp3" type="audio/mpeg" />
+	<source src="audio/solarSailer.ogg" type="audio/ogg" />
+	Your browser does not support the audio tag.
+</audio>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8">
+</script>
+<script>
+// //hide everything
+$('#wrapper').hide();
+$('#backgroundMusic').hide();
+$('#overlay').show();
+showMessageBox1();
+
+$('.button1').click(function(){
+		currentPlayer = 1;
+		$('#messageBox1').slideUp();
+		$('#overlay').hide();
+		$('#wrapper').show();
+		$('#backgroundMusic').hide();
+});
+
+$('.button2').click(function(){
+		currentPlayer = 2;
+		$('#messageBox1').slideUp();
+		$('#overlay').hide();
+		$('#wrapper').show();
+		$('#backgroundMusic').hide();
+});
+
+var playerOneName = ['Optimus', 'BumbleBee', 'Ironhide'],
+	playerTwoName = ['Megatron', 'Razorbeak', 'Starscream'],
+	curCharacter = 0,
+	winner = 0,
+	currentPlayer = 1,
+	currentCharacter1 = 0,
+	currentCharacter2 = 0,
+	playerOneCharacter = 'character-1',
+	playerTwoCharacter = 'formal-character-1',
+	charGroup1 = ['character-1', 'character-2', 'character-3'],
+	charGroup2 = ['formal-character-1', 'formal-character-2', 'formal-character-3'],
+	gameRound = 0,
+	PlayerOneScore = 0,
+	PlayerTwoScore = 0,
+	clickState = 0;
+
+		//reset round
+		function resetRound(){
+				$('.container > div').removeClass('selected '+ playerOneCharacter).fadeOut('fast');
+				$('.container > div').removeClass('selected '+ playerTwoCharacter).fadeOut('fast');
+				$('#messageBox').slideUp();
+				$('#overlay').hide();
+			}
+		//new round
+		function nextRound(){
+				$('.container > div').removeClass('selected '+ playerOneCharacter).fadeOut('fast');
+				$('.container > div').removeClass('selected '+ playerTwoCharacter).fadeOut('fast');
+				$('#messageBox').slideUp();
+				$('#overlay').hide();
+				if(winner === 2){
+				gameRound = (gameRound + 1);
+				}else {gameRound = (gameRound + 1);}
+		}
+		//reset game
+		function resetGame(){
+				$('.container > div').removeClass('selected '+ playerOneCharacter).fadeOut('fast');
+				$('.container > div').removeClass('selected '+ playerTwoCharacter).fadeOut('fast');
+				$('#good > div').removeClass('selected '+ playerOneCharacter);
+				$('#bad > div').removeClass('selected '+ playerTwoCharacter);
+				$('.round > h4').html('Round: 1');
+				curCharacter = 0,
+				winner = 0,
+				currentCharacter1 = 0,
+				currentCharacter2 = 0,
+				playerOneCharacter = 'character-1',
+				playerTwoCharacter = 'formal-character-1',
+				currentPlayer = 1,
+				gameRound = 0,
+				PlayerOneScore = 0,
+				PlayerTwoScore = 0;
+				$('.goodname').html(playerOneName[currentCharacter1]);
+				$('.badname').html(playerTwoName[currentCharacter2]);
+				$('#playerOneChar').removeClass();
+				$('#playerOneChar').addClass(playerOneCharacter);
+				$('#playerTwoChar').removeClass();
+				$('#playerTwoChar').addClass(playerTwoCharacter);
+				$('.Scoreone').html(PlayerOneScore);
+				$('.Scoretwo').html(PlayerTwoScore);
+				$('#messageBox').slideUp();
+				$('#overlay').hide();				
+		}
+		function playAgain(){
+				$('.container > div').fadeIn('slow');
+				$('.container > div').fadeIn('slow');
+		}			
+				
+//restart round button
+$('.resetRound').click(function(){
+		winner = 0;
+		resetRound();
+		playAgain();
+});	
+		
+//New Game button
+$('.newGame').click(function(){
+		winner = 0;
+		resetGame();
+		playAgain();
+});	
+
+$('.Scoreone').html(PlayerOneScore);
+$('.Scoretwo').html(PlayerTwoScore);
+
+$('.goodname').html(playerOneName[currentCharacter1]);
+$('.badname').html(playerTwoName[currentCharacter2]);
+
+$('#playerOneChar').click(function(e){
+	selectPlayer(1);
+	});
+
+$('#playerTwoChar').click(function(e){
+	selectPlayer(2);
+	});
+
+function showMessageBox(){
+
+	setTimeout(function(){
+		$('#overlay').show();
+		$('#messageBox').slideDown();
+	}, 500);
+}
+
+function showMessageBox1(){
+
+	setTimeout(function(){
+		$('#overlay').show();
+		$('#messageBox1').slideDown();
+	}, 500);
+}
+
+function selectPlayer(pNumber) {
+	if (pNumber === 1) {
+		currentCharacter1 = (currentCharacter1 + 1);
+		if (currentCharacter1 > (charGroup1.length - 1)) {
+			currentCharacter1 = 0;
+		}$('.goodname').html(playerOneName[currentCharacter1]);
+		playerOneCharacter = charGroup1[currentCharacter1];
+		$('#playerOneChar').removeClass();
+		$('#playerOneChar').addClass(playerOneCharacter);
+	} else {
+		currentCharacter2 = (currentCharacter2 + 1);
+		if (currentCharacter2 > (charGroup2.length - 1)) {
+			currentCharacter2 = 0;
+		}
+		$('.badname').html(playerTwoName[currentCharacter2]);
+		playerTwoCharacter = charGroup2[currentCharacter2];
+		$('#playerTwoChar').removeClass();
+		$('#playerTwoChar').addClass(playerTwoCharacter);
+	}
+}
+
+$('#backgroundMusic').hover(function(e){
+	$(this).prop('controls','controls');
+}, function(e){
+	$(this).prop('controls','');
+});
+
+
+$('.container > div').click(function (e){
+		clickState++;
+    if (clickState >= 1) {
+        $('#playerOneChar').off('click');
+    	$('#playerTwoChar').off('click');
+    	}
+	if ($(this).hasClass('selected') === false && winner === 0) {
+		$('#placeMarkerSound')[0].play();
+		if (currentPlayer === 1) {
+			$(this).hide().addClass('selected ' + playerOneCharacter).fadeIn('slow');
+			$('#aside2 > h4').html('Turn: Player Two<br />' + playerOneName[currentCharacter1]);
+			currentPlayer = 2;
+		} else {
+			$(this).hide().addClass('selected ' + playerTwoCharacter).fadeIn('slow');
+			$('#aside2 > h4').html('Turn: Player One<br />' + playerTwoName[currentCharacter2]);
+			currentPlayer = 1;
+		}
+		//start scoring here
+		if($('.container .selected').length >= 5){
+			//
+			var square1, square2, square3, square4, square5, square7, square8, square9;
+
+			square1 = $('#box1').hasClass(playerOneCharacter);
+			square2 = $('#box2').hasClass(playerOneCharacter);
+			square3 = $('#box3').hasClass(playerOneCharacter);
+			square4 = $('#box4').hasClass(playerOneCharacter);
+			square5 = $('#box5').hasClass(playerOneCharacter);
+			square6 = $('#box6').hasClass(playerOneCharacter);
+			square7 = $('#box7').hasClass(playerOneCharacter);
+			square8 = $('#box8').hasClass(playerOneCharacter);
+			square9 = $('#box9').hasClass(playerOneCharacter);
+
+			//test for all possible player one wins
+
+			//start horizontal
+			if (square1 && square2 && square3) {
+				winner = 1;
+			} else if (square4 && square5 && square6) {
+				winner = 1;
+			} else if (square7 && square8 && square9) {
+				winner = 1;
+				//start verticals
+			} else if (square1 && square4 && square7) {
+				winner = 1;
+			} else if (square2 && square5 && square8) {
+				winner = 1;
+			} else if (square3 && square6 && square9) {
+				winner = 1;
+				//diagonals
+			} else if (square1 && square5 && square9) {
+				winner = 1;
+			} else if (square3 && square5 && square7) {
+				winner = 1;
+			}
+
+			//player 2 testing if player one has not yet won
+			if(winner === 0){
+				square1 = $('#box1').hasClass(playerTwoCharacter);
+				square2 = $('#box2').hasClass(playerTwoCharacter);
+				square3 = $('#box3').hasClass(playerTwoCharacter);
+				square4 = $('#box4').hasClass(playerTwoCharacter);
+				square5 = $('#box5').hasClass(playerTwoCharacter);
+				square6 = $('#box6').hasClass(playerTwoCharacter);
+				square7 = $('#box7').hasClass(playerTwoCharacter);
+				square8 = $('#box8').hasClass(playerTwoCharacter);
+				square9 = $('#box9').hasClass(playerTwoCharacter);
+				
+				// BEGIN testing for player two win
+				//start horizontal
+				if (square1 && square2 && square3) {
+					winner = 2;
+				} else if (square4 && square5 && square6) {
+					winner = 2;
+				} else if (square7 && square8 && square9) {
+					winner = 2;
+					//start verticals
+				} else if (square1 && square4 && square7) {
+					winner = 2;
+				} else if (square2 && square5 && square8) {
+					winner = 2;
+				} else if (square3 && square6 && square9) {
+					winner = 2;
+					//diagonals
+				} else if (square1 && square5 && square9) {
+					winner = 2;
+				} else if (square3 && square5 && square7) {
+					winner = 2;
+				}
+				//If Player Two Wins
+				if(winner === 2){
+					//adds win to score
+					PlayerTwoScore = (PlayerTwoScore + 1);
+					$('#bad > .scoretwo').addClass('selected ' + playerTwoCharacter);
+					//outputs current player score
+					$('.Scoretwo').html(PlayerTwoScore);
+					$('#messageBox').html('<h1>player two wins the round!</h1><button>Next Round</button>');
+					$('#messageBox > button').addClass('nextRound');
+					showMessageBox();
+					if(PlayerTwoScore === 2){
+						$('#bad > .scoretwo').addClass('selected ' + playerTwoCharacter);
+						}
+					if(PlayerTwoScore === 3){
+						$('#bad > .scorethree').addClass('selected ' + playerTwoCharacter);
+						$('#messageBox').html('<h1>Player two wins!</h1><button>Next Game</button>');
+						$('#messageBox > button').addClass('nextGame');
+						showMessageBox();
+						}
+									
+				}else if ( $('.container .selected').length === 9){
+					//check for tie
+					$('#messageBox').html('<h1>Oh No!<br />It’s a tie.</h1><button>Next Round</button>');
+					$('#messageBox > button').addClass('resetRound');
+					showMessageBox();
+				}
+				}else {
+					PlayerOneScore = (PlayerOneScore + 1);
+					$('#good > .scoreone').addClass('selected ' + playerOneCharacter);
+					$('.Scoreone').html(PlayerOneScore);
+					$('#messageBox').html('<h1>Player one wins the round!</h1><button>Next Round</button>');
+					$('#messageBox > button').addClass('nextRound');
+					showMessageBox();
+						if(PlayerOneScore === 2){
+							$('#good > .scoretwo').addClass('selected ' + playerOneCharacter);
+							}
+						if(PlayerOneScore === 3){
+							$('#good > .scorethree').addClass('selected ' + playerOneCharacter);
+							$('#messageBox').html('<h1>player one wins!</h1><button>Next Game</button>');
+							$('#messageBox > button').addClass('nextGame');
+							showMessageBox();
+					} 
+			}
+		}
+		
+		//next round of game
+		$('#messageBox > .nextRound').click(function(){
+				winner = 0;
+				nextRound();
+				$('.round > h4').html('Round: ' + (gameRound + 1));
+				playAgain();
+			});
+		//new game
+		$('#messageBox > .nextGame').click(function(){
+				clickState = 0;
+				$('#playerOneChar').click(function(e){
+					selectPlayer(1);
+				});
+
+				$('#playerTwoChar').click(function(e){
+					selectPlayer(2);
+				});
+				winner = 0;
+				resetGame();
+				playAgain();
+			});	
+			
+		$('.visibleButton > .newGame').click(function(){
+				clickState = 0;
+				$('#playerOneChar').click(function(e){
+					selectPlayer(1);
+				});
+
+				$('#playerTwoChar').click(function(e){
+					selectPlayer(2);
+				});
+				winner = 0;
+				resetGame();
+				playAgain();
+			});	
+		//restart round on tie
+		$('#messageBox > .resetRound').click(function(){
+				winner = 0;
+				resetRound();
+				$('.round > h4').html('Round: ' + (gameRound + 1));
+				playAgain();
+			});		
+		}		
+});
+</script>
+</body>
+</html>
